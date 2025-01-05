@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Mapping Demo V0.9</title>
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" media="screen" title="leaflet">
+	<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js" charset="utf-8"></script>
+	<script src="https://unpkg.com/leaflet.minichart/dist/leaflet.minichart.min.js" charset="utf-8"></script>
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		.controls {
+            position: absolute;
+            top: 10px;
+            left: 100px;
+            background: rgba(168, 166, 166, 0.5);
+            padding: 10px;
+            z-index: 1000;
+        }
+	</style>
+	<script>
+	
+	</script>
+</head>
+
+<body>
+
+	<div class="controls">
+        <label for="thetype" style="font-weight: bold;">Choose a type:</label>
+        <select id="thetype" onchange="type_changed()" >
+            <option value="aminoglycoside">aminoglycoside</option>
+            <option value="bacitracin">bacitracin</option>
+            <option value="beta_lactam">beta_lactam</option>
+        </select>
+		<br/><br/>
+		<label style="font-weight: bold;">Choose a Visz:</label>
+		<input type="radio" name="myRadios" onclick="viz_changed(this);" value="1" checked/> <label>Total Value</label>
+		<input type="radio" name="myRadios" onclick="viz_changed(this);" value="2" /> <label>Subcomponents</label>
+    </div>
+	
+	<div id="map" style="position: absolute;top: 0;bottom: 0;width: 100%;"></div>
+	<script>
+		var data = [
+			{"sitename":"BB_12_05","lat":22.4199,"lon":113.9385,"type":"Beach","time":"May,2021",
+			"aminoglycoside":0.000237375,"bacitracin":0.000668642,"beta_lactam":0.005482612,
+		    "aminoglycoside_c":[0.000231478,0.000005896776],"bacitracin_c":[0.000567291,0.000101351],"beta_lactam_c":[0.000466096,0.000535455,0.000135945]},
+			{"sitename":"BB_13_05","lat":22.4040,"lon":114.2104,"type":"Beach","time":"May,2021",
+			"aminoglycoside":0.000221248,"bacitracin":0.000433775,"beta_lactam":0.001612429,
+			"aminoglycoside_c":[8.36E-05,0.000137677],"bacitracin_c":[0.00038631,4.75E-05],"beta_lactam_c":[0.000110906,0.000112389,0.000603727,0.000507895,0.00022244]},
+			{"sitename":"Q1_10_FD","lat":22.2584,"lon":113.9557,"type":"ERM","time":"August,2021",
+			"aminoglycoside":0.022303715,"bacitracin":0.025879082,"beta_lactam":0.040880608,
+			"aminoglycoside_c":[0.001182546,0.000254247,0.000154558,0.000254992,0.000592129,0.0001207],"bacitracin_c":[0.025686078,0.000193004],"beta_lactam_c":[0.000153154,0.000502315,0.000143778,0.00023442,0.000904861,0.000754832]},
+			{"sitename":"W_AS_10_05","lat":22.2789,"lon":114.2860,"type":"AS","time":"May,2021",
+			"aminoglycoside":0.011697325,"bacitracin":0.024622383,"beta_lactam":0.012889628,
+			"aminoglycoside_c":[0.00141882,0.000317633,0.000236427],"bacitracin_c":[4.53E-05,0.024577041],"beta_lactam_c":[0.000476684,0.00020017,0.00014503,0.00014503,0.000148506,0.000188602]},
+		];
+		var center = [22.3736, 114.0896];
+
+		var mymap = L.map('map').setView(center, 11);
+		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
+
+		var charts = {};
+		var vistype = "1";
+		var valuetype = document.getElementById("thetype").value;
+		for(var i =0; i<data.length; i++)
+		{
+			d = data[i];
+			charts[d.sitename] = L.minichart([d.lat,d.lon],
+				{
+					data:[d[valuetype]],
+					maxValues:Math.max.apply(Math, data.map(function(o) { return o.aminoglycoside; })),
+					width:30,
+					labelMinSize:1,
+					labelMaxSize:40
+				});
+			mymap.addLayer(charts[d.sitename]);
+		}
+
+		function update_map()
+		{
+			
+			if(vistype=="1")
+			{
+				console.log(vistype,valuetype)
+				for(var i =0; i<data.length; i++)
+				{
+					d = data[i];
+					charts[d.sitename].setOptions({type:"bar",width:30,data:[d[valuetype]],maxValues:Math.max.apply(Math, data.map(function(o) { return o[valuetype];}))});				
+				}
+			}
+		
+			if(vistype=="2")
+			{
+				console.log(vistype,valuetype)
+				var valuetype_c = valuetype+"_c";
+				for(var i =0; i<data.length; i++)
+				{
+					d = data[i];
+					charts[d.sitename].setOptions({type:"pie",data:d[valuetype_c],width:45});				
+				}
+			}
+			
+		}
+		function type_changed()
+		{
+			valuetype = document.getElementById("thetype").value;
+			update_map();
+		}
+		function viz_changed(myRadio) {
+			vistype = myRadio.value;
+			update_map();
+		}
+	</script>
+</div>
+</body>
+</html>
