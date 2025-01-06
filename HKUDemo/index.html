@@ -13,7 +13,8 @@
             padding: 0;
         }
         #map {
-            height: 100%; /* 使地图占满整个页面 */
+            height: 100%; 
+            width: 70%;
         }
 
         #loading {
@@ -41,15 +42,8 @@
 
         #charts_panel {
             position: absolute;
-            top: 20%; /* Control panel position */
-            right: 10%; /* Control panel position */
-            background: rgba(255, 255, 255, 0.5); /* Background for visibility */
-            padding: 10px; /* Padding for aesthetics */
-            z-index: 1000; /* Ensure it is above the map */
-            border-radius: 5px; /* Rounded corners */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow effect */
-            width: 20%;
-            height: 45%;
+            right: 0%;
+            width: 30%;
         }
 
         .search-container {
@@ -95,24 +89,24 @@
 
 
 <div id="charts_panel">
-    <div style="display: flex;align-items: center;">
+   
         <label for="siteTypeSelector" style="font-weight: bold;margin-left: 20px;margin-right: 10px;">Select Site Type: </label>
-        <select id="siteTypeSelector" style="height: 30px;">
+        <select id="siteTypeSelector" style="height: 30px;margin-top: 10px;margin-bottom: 10px;">
             <option value="all">All Sites</option>
             <option value="1">Type 1 Sites</option>
             <option value="2">Type 2 Sites</option>
             <option value="3">Type 3 Sites</option>
         </select>
-
+       
         <div style="display: flex;align-items: center;">
             <label for="search" style="font-weight: bold;margin-left: 20px;margin-right: 10px;">Search Data Item: </label>
             <div class="search-container">
-                <input type="text" id="search" placeholder="search data item..." autocomplete="off">
+                <input type="text" id="search" placeholder="search data item..." autocomplete="off" style="margin-top: 10px;margin-bottom: 10px;">
                 <div id="suggestions" class="autocomplete-suggestions"></div>
             </div>
         </div>
-    </div> 
-    
+ 
+        <hr style="color: #ccc;">
     <label id="select_site" style="font-weight: bold;margin-left: 20px;margin-right: 10px;">Site TK</label>
     <div id="stackedbar"></div>
     <label id="select_rect" style="font-weight: bold;margin-left: 20px;margin-right: 10px;"></label>

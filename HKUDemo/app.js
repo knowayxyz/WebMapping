@@ -7,7 +7,7 @@ var map;
 
 function init_map()
 {
-    map = L.map('map').setView([22.4, 114.2], 12); // 设置初始视图
+    map = L.map('map').setView([22.4, 114.15], 11); // 设置初始视图
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
     }).addTo(map);
@@ -173,11 +173,13 @@ function stacked_time_bars(sitename)
         });
 
         // Append SVG to the div
+        const bodywidth = document.body.clientWidth;
+        const bodyheight= document.body.clientHeight;
         d3.select("#stackedbar").html("");
         const svg = d3.select("#stackedbar")
             .append("svg")
-            .attr("width", 800)
-            .attr("height", 400);
+            .attr("width", bodywidth*0.30)
+            .attr("height", bodyheight*0.40);
 
         const margin = { top: 20, right: 30, bottom: 40, left: 40 };
         const width = +svg.attr("width") - margin.left - margin.right;
@@ -245,8 +247,8 @@ function draw_pie_map(timepoint, cat)
     const categories = Math.floor(Math.random() * 5) + 6; 
     const data = Array.from({ length: categories }, () => Math.floor(Math.random() * 100));
 
-    const width = 400;
-    const height = 400;
+    const width = document.body.clientWidth*0.3;
+    const height = document.body.clientHeight*0.4;
     const radius = Math.min(width, height) / 2 - 40;
 
     d3.select("#piechart").html("");
